@@ -1,0 +1,47 @@
+﻿@{
+    ViewData["Title"] = "ProgramaEstudio";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>ProgramaEstudio</h2>
+
+@(Html.DevExtreme().DataGrid<Proyecto_entrega3.Models.ProgramaEstudio>()
+    .ShowBorders(true)
+    .DataSource(d => d.WebApi().Controller("ProgramaEstudio")
+    .UpdateAction(true)
+    .InsertAction(true)
+    .DeleteAction(true)
+    .Key("IdProgramaEstudio"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.IdProgramaEstudio);
+        columns.AddFor(m => m.Nombreprograes);
+        columns.AddFor(m => m.Nivel);
+        columns.AddFor(m => m.Facultad);
+        columns.AddFor(m => m.Duracionprograes);
+        columns.AddFor(m => m.IdEstudiante)
+        .Lookup(lookUp => lookUp
+            .DataSource(
+                d => d.WebApi()
+                .Controller("Estudiante")
+                .LoadAction("Get")
+                .Key("IdEstudiante")
+            )
+            .ValueExpr("IdEstudiante")
+            .DisplayExpr("Primernombre")
+    );
+    })
+    .Editing(editing =>
+    {
+        editing.Mode(GridEditMode.Popup);
+        editing.AllowUpdating(true);
+        editing.AllowAdding(true);
+        editing.AllowDeleting(true);
+    })
+    .Paging(p => p.PageSize(100))
+    .FilterRow(f => f.Visible(true))
+    .HeaderFilter(f => f.Visible(true))
+    .GroupPanel(p => p.Visible(true))
+    .Grouping(g => g.AutoExpandAll(false))
+    .RemoteOperations(true)
+)

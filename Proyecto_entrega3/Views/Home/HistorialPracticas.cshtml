@@ -1,0 +1,70 @@
+﻿@{
+    ViewData["Title"] = "HistorialPracticas";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>HistorialPracticas</h2>
+
+@(Html.DevExtreme().DataGrid<Proyecto_entrega3.Models.HistorialPracticas>()
+    .ShowBorders(true)
+    .DataSource(d => d.WebApi().Controller("HistorialPracticas")
+    .UpdateAction(true)
+    .InsertAction(true)
+    .DeleteAction(true)
+    .Key("IdHistorial"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.IdHistorial);
+        columns.AddFor(m => m.totalpracticas);
+        columns.AddFor(m => m.FechaInicio);
+        columns.AddFor(m => m.FechaFin);
+        columns.AddFor(m => m.Titulo);
+        columns.AddFor(m => m.Descripcionpractica);
+        columns.AddFor(m => m.IdEstudiante)
+        .Lookup(lookUp => lookUp
+            .DataSource(
+                d => d.WebApi()
+                .Controller("Estudiante")
+                .LoadAction("Get")
+                .Key("IdEstudiante")
+            )
+            .ValueExpr("IdEstudiante")
+            .DisplayExpr("Primernombre")
+    );
+        columns.AddFor(m => m.IdSupervisor)
+        .Lookup(lookUp => lookUp
+            .DataSource(
+                d => d.WebApi()
+                .Controller("Supervisor")
+                .LoadAction("Get")
+                .Key("IdSupervisor")
+            )
+            .ValueExpr("IdSupervisor")
+            .DisplayExpr("Primernombre")
+    );
+        columns.AddFor(m => m.IdArea)
+        .Lookup(lookUp => lookUp
+            .DataSource(
+                d => d.WebApi()
+                .Controller("Area")
+                .LoadAction("Get")
+                .Key("IdArea")
+            )
+            .ValueExpr("IdArea")
+            .DisplayExpr("Nombrearea")
+    );
+    })
+    .Editing(editing =>
+    {
+        editing.Mode(GridEditMode.Popup);
+        editing.AllowUpdating(true);
+        editing.AllowAdding(true);
+        editing.AllowDeleting(true);
+    })
+    .Paging(p => p.PageSize(100))
+    .FilterRow(f => f.Visible(true))
+    .HeaderFilter(f => f.Visible(true))
+    .GroupPanel(p => p.Visible(true))
+    .Grouping(g => g.AutoExpandAll(false))
+    .RemoteOperations(true)
+)

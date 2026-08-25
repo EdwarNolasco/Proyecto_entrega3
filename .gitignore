@@ -1,0 +1,28 @@
+# Visual Studio
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Build output
+[Bb]in/
+[Oo]bj/
+
+# NuGet packages restored from packages.config
+packages/
+
+# Local databases and development data
+*.mdf
+*.ldf
+App_Data/
+*.env
+
+# Debug and profiling files
+*.pdb
+*.cache
+*.log
+
+# OS files
+.DS_Store
+Thumbs.db

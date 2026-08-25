@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "Supervisor";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Supervisor</h2>
+
+@(Html.DevExtreme().DataGrid<Proyecto_entrega3.Models.Supervisor>()
+    .ShowBorders(true)
+    .DataSource(d => d.WebApi().Controller("Supervisor")
+    .UpdateAction(true)
+    .InsertAction(true)
+    .DeleteAction(true)
+    .Key("IdSupervisor"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.IdSupervisor);
+        columns.AddFor(m => m.Primernombre);
+        columns.AddFor(m => m.Segundonombre);
+        columns.AddFor(m => m.Primerapellido);
+        columns.AddFor(m => m.Segundoapellido);
+        columns.AddFor(m => m.Edad);
+        columns.AddFor(m => m.Telefono);
+        columns.AddFor(m => m.CorreoElectronico);
+        columns.AddFor(m => m.Direccion);
+        columns.AddFor(m => m.Genero);
+    })
+    .Editing(editing =>
+    {
+        editing.Mode(GridEditMode.Popup);
+        editing.AllowUpdating(true);
+        editing.AllowAdding(true);
+        editing.AllowDeleting(true);
+    })
+    .Paging(p => p.PageSize(100))
+    .FilterRow(f => f.Visible(true))
+    .HeaderFilter(f => f.Visible(true))
+    .GroupPanel(p => p.Visible(true))
+    .Grouping(g => g.AutoExpandAll(false))
+    .RemoteOperations(true)
+)

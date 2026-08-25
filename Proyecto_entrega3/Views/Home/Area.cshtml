@@ -1,0 +1,67 @@
+﻿@{
+    ViewData["Title"] = "Area";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+@section ExternalDependencies {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-polyfill/7.10.1/polyfill.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/exceljs/3.8.0/exceljs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+}
+
+<h2>Area</h2>
+
+@(Html.DevExtreme().DataGrid<Proyecto_entrega3.Models.Area>()
+    .Selection(s => s.Mode(SelectionMode.Multiple))
+    .Export(e => e.Enabled(true).AllowExportSelectedData(true))
+    .ShowBorders(true)
+    .SearchPanel(p => p.Visible(true))
+    .GroupPanel(groupPanel => groupPanel.Visible(true))
+    .Grouping(grouping => grouping.AutoExpandAll(true))
+    .OnExporting("exporting")
+    .DataSource(d => d.WebApi().Controller("Area")
+    .UpdateAction(true)
+    .InsertAction(true)
+    .DeleteAction(true)
+    .Key("IdArea"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.IdArea);
+        columns.AddFor(m => m.Nombrearea);
+        columns.AddFor(m => m.Descripcionarea);
+    })
+    .Editing(editing =>
+    {
+        editing.Mode(GridEditMode.Row);//Podemos Row o form otra opción, en caso de cambiar podemos descomentar las lineas siguientes sino no
+        editing.AllowUpdating(true);
+        editing.AllowAdding(true);
+        editing.AllowDeleting(true);
+        editing.ConfirmDelete(false);
+        editing.UseIcons(true);
+        editing.NewRowPosition(GridNewRowPosition.ViewportTop);
+    })
+    .Paging(p => p.PageSize(10))
+    .FilterRow(f => f.Visible(true))
+    .HeaderFilter(f => f.Visible(true))
+    .GroupPanel(p => p.Visible(true))
+    .Grouping(g => g.AutoExpandAll(false))
+    .RemoteOperations(true)
+)
+
+<script>
+    function exporting(e) {
+        var workbook = new ExcelJS.Workbook();
+        var worksheet = workbook.addWorksheet('AreasEmpresa');
+
+        DevExpress.excelExporter.exportDataGrid({
+            component: e.component,
+            worksheet: worksheet,
+            autoFilterEnabled: true
+        }).then(function () {
+            workbook.xlsx.writeBuffer().then(function (buffer) {
+                saveAs(new Blob([buffer], { type: 'application/octet-stream' }), 'AreasEmpresa.xlsx');
+            });
+        });
+        e.cancel = true;
+    }
+</script>

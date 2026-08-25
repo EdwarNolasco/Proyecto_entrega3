@@ -1,0 +1,35 @@
+﻿@{
+    ViewData["Title"] = "Calendario";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Calendario</h2>
+
+@(Html.DevExtreme().DataGrid<Proyecto_entrega3.Models.Calendario>()
+    .ShowBorders(true)
+    .DataSource(d => d.WebApi().Controller("Calendario")
+    .UpdateAction(true)
+    .InsertAction(true)
+    .DeleteAction(true)
+    .Key("IdCalendario"))
+    .Columns(columns =>
+    {
+        columns.AddFor(m => m.IdCalendario);
+        columns.AddFor(m => m.fechacalendario);
+        columns.AddFor(m => m.tipodia);
+        columns.AddFor(m => m.descripcioncalen);
+    })
+    .Editing(editing =>
+    {
+        editing.Mode(GridEditMode.Popup);
+        editing.AllowUpdating(true);
+        editing.AllowAdding(true);
+        editing.AllowDeleting(true);
+    })
+    .Paging(p => p.PageSize(100))
+    .FilterRow(f => f.Visible(true))
+    .HeaderFilter(f => f.Visible(true))
+    .GroupPanel(p => p.Visible(true))
+    .Grouping(g => g.AutoExpandAll(false))
+    .RemoteOperations(true)
+)
